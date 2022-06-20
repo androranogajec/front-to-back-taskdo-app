@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const port = 8080;
 const connection = require("./database");
-const userRouter = require("./routes/userRouter")
+const indexRouter = require("./routes/indexRouter")
 
 /* Connection to the mongodb */
 connection();
@@ -20,4 +20,4 @@ app.use(express.json())
 app.use(cors());
 
 /* routers */
-app.use('/api', userRouter)
+app.use('/api', indexRouter);

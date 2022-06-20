@@ -2,7 +2,7 @@ const UserModel = require("../models/userModel");
 const express = require("express");
 const userRouter = express();
 
-userRouter.get("/getAllUsers", async (req, res) => {
+userRouter.get("/", async (req, res) => {
   try {
     const users = await UserModel.find({});
     res.send(users);
@@ -11,6 +11,17 @@ userRouter.get("/getAllUsers", async (req, res) => {
     res.end();
   }
 });
+
+userRouter.get("/user/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+      const user = await UserModel.findById(id);
+      res.send(user);
+    } catch (error) {
+      console.log(error);
+      res.end();
+    }
+  });
 
 userRouter.post("/createUser", async (req, res) => {
   console.log(req.body);
@@ -36,7 +47,7 @@ userRouter.delete("/deleteUser/:id", async (req, res) => {
   }
 });
 
-userRouter.patch("/:id", async (req, res) => {
+userRouter.patch("/patchUser/:id", async (req, res) => {
   const id = req.params.id;
   let body = req.body;
   try {
