@@ -24,6 +24,7 @@ function Tasks(props) {
   async function handleGet() {
     try {
       const { data } = await getTasks();
+      console.log(data)
       setTasks(data);
     } catch (error) {
       console.log(error);

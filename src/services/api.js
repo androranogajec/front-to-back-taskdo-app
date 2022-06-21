@@ -1,21 +1,20 @@
 import axios from "axios";
+
 //api url
-const apiUrl = axios.create({
-  baseURL:"http://localhost:8080/api/tasks"
-})
+const URL = 'http://localhost:8080/api'; 
 
 export function getTasks() {
-  return axios.get(apiUrl);
+  return axios.get(`${URL}/tasks`);
 }
 
 export function postTask(task) {
-  return axios.post(apiUrl, task);
+  return axios.post(URL, task);
 }
 
 export function patchTask(id, task) {
-  return axios.patch(`${apiUrl}/${id}`, task);
+  return axios.patch(`${URL}/${id}`, task);
 }
 
 export function deleteTask(id) {
-  return axios.delete(apiUrl + "/" + id);
+  return axios.delete(URL + "/" + id);
 }
