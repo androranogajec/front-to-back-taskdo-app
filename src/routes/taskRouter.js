@@ -12,6 +12,7 @@ try {
 }
 });
 
+/* get all tasks by user id */
 taskRouter.get("/:id", async (req, res) => {
     const userId = req.params.id;
   try {
@@ -48,17 +49,17 @@ taskRouter.delete("/deleteTaskById/:id", async (req, res) => {
 
 taskRouter.delete("/deleteAllTasksByUserId/:id", async (req, res) => {
   const id = req.params.id;
-  console.log(id);
   try {
     await TaskModel.deleteMany({userId: id});
-    res.send('test');
+    res.end();
   } catch (error) {
     console.log(error);
     res.end();
   }
 });
 
-/* taskRouter.patch("/:id", async (req, res) => {
+/* patch a task by id */
+taskRouter.patch("/patchTask/:id", async (req, res) => {
   const id = req.params.id;
   let body = req.body;
   try {
@@ -68,6 +69,6 @@ taskRouter.delete("/deleteAllTasksByUserId/:id", async (req, res) => {
     console.log(error);
     res.end();
   }
-}); */
+});
 
 module.exports = taskRouter;

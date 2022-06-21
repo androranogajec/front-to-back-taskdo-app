@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-/* async anonymous IIFE connection to the database */
+/* async connection to the database */
 const connection = async () => {
   try {
     await mongoose.connect(
