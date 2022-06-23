@@ -9,12 +9,15 @@
 
 .button:hover {
     background-color:#aa68e8
-    
   }
+
 .buttonInner {
   text-decoration: none;
+  color: #953fe6;
 }
-
+.buttonInner:hover {
+  color: #8827e2;
+}
 .header {
   font-weight: 700;
   font-size: 72px;
@@ -22,6 +25,7 @@
   color: #5e5e5e;
   margin-bottom: -5px;
 }
+
 .headerText {
   font-size: 24px;
   font-weight: 700;
@@ -39,15 +43,28 @@
   color: #ffffff;
 }
 
-.wrapper {
- height: 100vh;
- width: 100vw;
- display: flex;
- justify-content: center;
- align-items: center;
- text-align: center;
-
+.flexContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-.center {
-    
+
+.row {
+  flex: 0.4;
+}
+
+.flexContainer_1 {
+  display: flex;
+  justify-content: end;
+}
+
+.flexContainer_2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.span {
+  margin-right: 5px;
 }
