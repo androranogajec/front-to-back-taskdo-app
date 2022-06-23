@@ -2,12 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import {
   postTask,
-  getTasks,
-  deleteTask,
+  getAllTasks,
+  deleteTaskById,
   patchTask,
-} from "../services/api";
+} from "../../services/api";
 import Input from "./Input";
-import Task from "./Task";
+import Task from "../Task";
+import s from "./tasks.module.css";
 
 function Tasks(props) {
   const [tasks, setTasks] = useState([]);
@@ -23,7 +24,7 @@ function Tasks(props) {
 
   async function handleGet() {
     try {
-      const { data } = await getTasks();
+      const { data } = await getAllTasks();
       console.log(data)
       setTasks(data);
     } catch (error) {
@@ -49,7 +50,7 @@ function Tasks(props) {
   async function handleDelete(id) {
     let tasksCopy = [...tasks];
     try {
-      await deleteTask(id);
+      await deleteTaskById(id);
       tasksCopy = tasksCopy.filter(function (e) {
         if (e._id !== id) {
           return e;
@@ -90,7 +91,7 @@ function Tasks(props) {
     }
   }
   return (
-    <div className="App">
+    <div className={s.flexContainer}>
       <Input
         currentTask={currentTask}
         handlePost={handlePost}

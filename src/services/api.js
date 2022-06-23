@@ -1,20 +1,48 @@
 import axios from "axios";
 
-//api url
+/* API URL */
 const URL = 'http://localhost:8080/api'; 
 
-export function getTasks() {
+/* 
+
+
+API FOR TASKS
+
+
+*/
+
+
+export function getAllTasks() {
   return axios.get(`${URL}/tasks`);
 }
 
-export function postTask(task) {
-  return axios.post(URL, task);
+export function getAllTasksByUserId(userId) {
+  return axios.get(`${URL}/tasks/${userId}`);
+}
+
+export function postTask(task, userId) {
+  return axios.post(`${URL}/tasks/postTask`, task);
 }
 
 export function patchTask(id, task) {
   return axios.patch(`${URL}/${id}`, task);
 }
 
-export function deleteTask(id) {
-  return axios.delete(URL + "/" + id);
+export function deleteTaskById(id) {
+  return axios.delete(`${URL}/tasks/deleteTaskById/${id}`);
 }
+
+export function deleteAllTasksByUserId(userId) {
+  return axios.delete(`${URL}/tasks/deleteAllTasksByUserId/${userId}`);
+}
+
+
+
+
+/* 
+
+
+API FOR USERS
+
+
+*/

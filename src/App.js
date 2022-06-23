@@ -1,5 +1,5 @@
 import "./App.css";
-import Tasks from "./components/Tasks.js";
+import Tasks from "./components/tasks/Tasks.js";
 import Preauthscreen from "./components/PreAuthentication/Preauthscreen";
 import { Routes, Route, Link } from "react-router-dom";
 import Auth from "./components/Authentication/Auth";
