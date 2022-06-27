@@ -21,7 +21,7 @@ export function getAllTasksByUserId(userId) {
 }
 
 export function postTask(task, userId) {
-  return axios.post(`${URL}/tasks/postTask`, task);
+  return axios.post(`${URL}/tasks/postTask`, task, userId);
 }
 
 export function patchTask(id, task) {
@@ -45,4 +45,9 @@ export function deleteAllTasksByUserId(userId) {
 API FOR USERS
 
 
+
 */
+
+export function postUser(user){
+  return axios.post(`${URL}/users/postUser`, user)
+}

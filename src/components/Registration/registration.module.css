@@ -64,4 +64,11 @@
       margin: 0px;
       padding: 0px;
   }
-  
+.upperBlockInner {
+  display: flex;
+  flex-direction: column;
+}
+.error {
+  color: red;
+  border-color: red;
+}

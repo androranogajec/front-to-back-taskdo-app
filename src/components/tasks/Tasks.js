@@ -7,7 +7,7 @@ import {
   patchTask,
 } from "../../services/api";
 import Input from "./Input";
-import Task from "../Task";
+import Task from "../Task/Task";
 import s from "./tasks.module.css";
 
 function Tasks(props) {
