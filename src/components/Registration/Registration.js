@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import s from "./registration.module.css";
 import { postUser } from "../../services/api";
-import validator from "validator";
+import { isUser, isSemiFilterUserObject } from "../Validators/users/user";
 
 function Registration(props) {
   /* useContext */
@@ -12,7 +12,8 @@ function Registration(props) {
     passwordCheck: "",
     email: "",
   });
-  const [userBoolen, setUserBoolean] = useState({
+
+  const [userBoolean, setUserBoolean] = useState({
     username: true,
     name: true,
     password: true,
@@ -31,66 +32,12 @@ function Registration(props) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    function test() {
-      let userValidation = {};
-      for (const property in user) {
-        if (property === "username") {
-          userValidation.username = validator.isLength(
-            user[property].toString(),
-            { min: 0, max: 24 }
-          );
-        }
-
-        if (property === "name") {
-          userValidation.name = validator.isLength(user[property].toString(), {
-            min: 0,
-            max: 24,
-          });
-        }
-
-        if (property === "email") {
-          userValidation.email =
-            validator.isLength(user[property].toString(), {
-              min: 0,
-              max: 42,
-            }) && validator.isEmail(user[property].toString());
-        }
-
-        if (property === "password") {
-          userValidation.password = validator.isLength(
-            user[property].toString(),
-            {
-              min: 0,
-              max: 42,
-            }
-          );
-        }
-
-        if (property === "passwordCheck") {
-          userValidation.passwordCheck = validator.isLength(
-            user[property].toString(),
-            {
-              min: 0,
-              max: 42,
-            }
-          );
-        }
-
-        if (user["password"] !== user["passwordCheck"]) {
-          userValidation.password = false;
-          userValidation.passwordCheck = false;
-        }
-      }
-      return userValidation;
-    }
-    console.log(user, test());
-   /*  try {
-      let data = await postUser(user);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    } */
+   /*  setUserBoolean(isSemiUserValidate(user)) */
+ /*    console.log("init", user, "modified", isUser(user)); */
+    console.log(isSemiFilterUserObject(isUser(user),user))
+   
   }
+
 
   return (
     <div className={s.wrapper}>
@@ -120,6 +67,9 @@ function Registration(props) {
             />
           </label>
           <label className={s.upperBlockInner}>
+            {userBoolean.passwordCheck && userBoolean.password ? (
+              <span className={s.error}>email is invalid</span>
+            ) : null}
             <p className={s.inputText}>Email</p>
             <input
               required
@@ -130,13 +80,16 @@ function Registration(props) {
             />
           </label>
           <label className={s.upperBlockInner}>
+          {userBoolean.passwordCheck && userBoolean.password ? (
+              null
+            ) : <span className={s.error}>passwords don't match</span>}
+            
             <p className={s.inputText}>Password</p>
             <input
               required
               name="password"
               onChange={handleInputChange}
               className={s.inputFieldPassword}
-      
               type="text"
             />
           </label>
@@ -146,7 +99,6 @@ function Registration(props) {
               required
               name="passwordCheck"
               onChange={handleInputChange}
-           
               className={s.inputFieldPassword}
             />
           </label>
