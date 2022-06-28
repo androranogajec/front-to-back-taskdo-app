@@ -1,25 +1,34 @@
 import React, { useEffect, useState } from "react";
 import s from "./registration.module.css";
 import { postUser } from "../../services/api";
-import { isUser, isSemiFilterUserObject } from "../Validators/users/user";
+import {
+  isUser,
+  isPasswordMatch,
+  isEveryTrue,
+  filterUserObjectFromPasswordMatch,
+  setPasswordToFalse,
+} from "../Validators/users/user";
 
 function Registration(props) {
   /* useContext */
-  const [user, setUser] = useState({
+
+  const userStringInit = {
     username: "",
     name: "",
     password: "",
     passwordCheck: "",
     email: "",
-  });
+  };
 
-  const [userBoolean, setUserBoolean] = useState({
+  const userBooleanInit = {
     username: true,
     name: true,
     password: true,
-    passwordCheck: true,
     email: true,
-  });
+  };
+
+  const [user, setUser] = useState(userStringInit);
+  const [userBoolean, setUserBoolean] = useState(userBooleanInit);
 
   useEffect(() => {}, []);
 
@@ -32,20 +41,43 @@ function Registration(props) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-   /*  setUserBoolean(isSemiUserValidate(user)) */
- /*    console.log("init", user, "modified", isUser(user)); */
-    console.log(isSemiFilterUserObject(isUser(user),user))
-   
+    if (isPasswordMatch(user)) {
+      /* 
+      passwords match 
+      init userBoolean 
+      */
+      setUserBoolean(userBooleanInit);
+      if (isEveryTrue(isUser(filterUserObjectFromPasswordMatch(user)))) {
+        let validatedUser = filterUserObjectFromPasswordMatch(user);
+        /* 
+        send to the backend 
+         */
+        console.log(validatedUser);
+      } else {
+        /* 
+          something else doesn't match
+          */
+        setUserBoolean(isUser(filterUserObjectFromPasswordMatch(user)));
+      }
+    } else {
+      /* 
+      passwords don't match 
+      */
+      setUserBoolean(
+        setPasswordToFalse(isUser(filterUserObjectFromPasswordMatch(user)))
+      );
+    }
   }
-
 
   return (
     <div className={s.wrapper}>
       <div className={s.wrapperInner}>
         <form className={s.upperBlock} onSubmit={handleSubmit}>
           <label className={s.upperBlockInner}>
+            {userBoolean.username ? null : (
+              <span className={s.error}>username is too long</span>
+            )}
             <p className={s.inputText}>Username</p>
-            <span className={s.error}>username is too long</span>
             <input
               value={user.username}
               required
@@ -56,8 +88,10 @@ function Registration(props) {
             />
           </label>
           <label className={s.upperBlockInner}>
+            {userBoolean.name ? null : (
+              <span className={s.error}>name is too long</span>
+            )}
             <p className={s.inputText}>Name</p>
-            <span className={s.error}>name is too long</span>
             <input
               required
               name="name"
@@ -67,9 +101,9 @@ function Registration(props) {
             />
           </label>
           <label className={s.upperBlockInner}>
-            {userBoolean.passwordCheck && userBoolean.password ? (
+            {userBoolean.email ? null : (
               <span className={s.error}>email is invalid</span>
-            ) : null}
+            )}
             <p className={s.inputText}>Email</p>
             <input
               required
@@ -80,10 +114,9 @@ function Registration(props) {
             />
           </label>
           <label className={s.upperBlockInner}>
-          {userBoolean.passwordCheck && userBoolean.password ? (
-              null
-            ) : <span className={s.error}>passwords don't match</span>}
-            
+            {userBoolean.password ? null : (
+              <span className={s.error}>passwords don't match</span>
+            )}
             <p className={s.inputText}>Password</p>
             <input
               required

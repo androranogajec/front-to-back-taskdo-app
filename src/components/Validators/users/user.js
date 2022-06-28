@@ -1,5 +1,45 @@
 import validator from "validator";
 
+export function isPasswordMatch(user) {
+  /* 
+  if passwords match return true or false
+  */
+
+  for (const property in user) {
+    if (user["passwordCheck"] === user["password"]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+export function filterUserObjectFromPasswordMatch(user) {
+  /* 
+    filter user object from password check
+  */
+
+  let userCopy = Object.assign({}, user);
+  for (const property in userCopy) {
+    if (property === "passwordCheck") {
+      delete userCopy["passwordCheck"];
+      return userCopy;
+    }
+  }
+}
+
+export function setPasswordToFalse(user) {
+  /* 
+if password and password check don't match,
+then this function sets password to false, to manipulate the state further 
+*/
+
+  let userCopy = Object.assign({}, user);
+  for (const property in userCopy) {
+    if (property === "password") userCopy["password"] = false;
+  }
+  return userCopy;
+}
 export function isUser(user) {
   /* 
     
@@ -42,47 +82,13 @@ export function isUser(user) {
         }
       );
     }
-
-    if (property === "passwordCheck") {
-      userValidation.passwordCheck = validator.isLength(
-        userCopy[property].toString(),
-        {
-          min: 0,
-          max: 42,
-        }
-      );
-    }
-
-    if (userCopy["password"] !== userCopy["passwordCheck"]) {
-      userValidation.password = false;
-      userValidation.passwordCheck = false;
-    }
-   
-  }  
-
-return userValidation;
+  }
+  return userValidation;
 }
 
-
-export function isSemiFilterUserObject(userValidation, user){
-    /* 
-    
-    if true return modified user object without passwordCheck field
-    if false return the same userValidation object 
-    
-    */
-    let userCopy  = Object.assign({}, user);
-    let isEveryPropertyTrue = Object.values(userValidation).every(function (e) {
-        return e === true;
-      })
-    if (isEveryPropertyTrue) {
-        for (const property in userCopy) {
-          if (property === "passwordCheck") {
-            delete userCopy["passwordCheck"];
-            return userCopy;
-          }
-        } 
-  }else{
-    return userValidation;
-  }
+export function isEveryTrue(user) {
+  /* 
+  if every object value is true, then true
+  */
+  return Object.values(user).every((e) => e === true);
 }
