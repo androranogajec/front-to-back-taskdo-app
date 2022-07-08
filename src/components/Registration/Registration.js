@@ -1,67 +1,69 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import s from "./registration.module.css";
 import { postUser } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 import {
   isUser,
   isPasswordMatch,
-  isEveryTrue,
+  isEveryFieldTrue,
   filterUserObjectFromPasswordMatch,
   setPasswordToFalse,
 } from "../Validators/users/user";
 
+/* 
+  user data 
+  */
+const userStringInit = {
+  username: "",
+  name: "",
+  password: "",
+  passwordCheck: "",
+  email: "",
+};
+
+const userBooleanInit = {
+  username: true,
+  name: true,
+  password: true,
+  email: true,
+};
+
 function Registration(props) {
-  /* useContext */
-
-  const userStringInit = {
-    username: "",
-    name: "",
-    password: "",
-    passwordCheck: "",
-    email: "",
-  };
-
-  const userBooleanInit = {
-    username: true,
-    name: true,
-    password: true,
-    email: true,
-  };
-
   const [user, setUser] = useState(userStringInit);
   const [userBoolean, setUserBoolean] = useState(userBooleanInit);
-
-  useEffect(() => {}, []);
+  /* navigate to tasks if user is validated */
+  const navigate = useNavigate();
 
   function handleInputChange(event) {
     const name = event.target.name;
     const value = event.target.value;
-
     setUser({ ...user, [name]: value });
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
     if (isPasswordMatch(user)) {
-      /* 
-      passwords match 
-      init userBoolean 
-      */
       setUserBoolean(userBooleanInit);
-      if (isEveryTrue(isUser(filterUserObjectFromPasswordMatch(user)))) {
+      if (isEveryFieldTrue(isUser(filterUserObjectFromPasswordMatch(user)))) {
         let validatedUser = filterUserObjectFromPasswordMatch(user);
-        /* 
-        send to the backend 
-         */
-        console.log(validatedUser);
+        setUser(userStringInit);
+        try {
+          postUser(validatedUser);
+          navigate("/tasks");
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         /* 
-          something else doesn't match
+          if not every true
+          setUserBoolean needed fields to false values
           */
         setUserBoolean(isUser(filterUserObjectFromPasswordMatch(user)));
       }
     } else {
       /* 
-      passwords don't match 
+      passwords don't match
+      setPassword field to false 
       */
       setUserBoolean(
         setPasswordToFalse(isUser(filterUserObjectFromPasswordMatch(user)))
@@ -93,6 +95,7 @@ function Registration(props) {
             )}
             <p className={s.inputText}>Name</p>
             <input
+              value={user.name}
               required
               name="name"
               onChange={handleInputChange}
@@ -106,6 +109,7 @@ function Registration(props) {
             )}
             <p className={s.inputText}>Email</p>
             <input
+              value={user.email}
               required
               name="email"
               onChange={handleInputChange}
@@ -119,6 +123,7 @@ function Registration(props) {
             )}
             <p className={s.inputText}>Password</p>
             <input
+              value={user.password}
               required
               name="password"
               onChange={handleInputChange}
@@ -129,6 +134,7 @@ function Registration(props) {
           <label className={s.upperBlockInner}>
             <p className={s.inputText}>Password</p>
             <input
+              value={user.passwordCheck}
               required
               name="passwordCheck"
               onChange={handleInputChange}

@@ -42,10 +42,8 @@ then this function sets password to false, to manipulate the state further
 }
 export function isUser(user) {
   /* 
-    
     validate user object, 
     return boolean user object
-    
     */
   let userValidation = {};
   let userCopy = Object.assign({}, user);
@@ -86,7 +84,7 @@ export function isUser(user) {
   return userValidation;
 }
 
-export function isEveryTrue(user) {
+export function isEveryFieldTrue(user) {
   /* 
   if every object value is true, then true
   */

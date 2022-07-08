@@ -4,6 +4,9 @@ import Preauthscreen from "./components/PreAuthentication/Preauthscreen";
 import { Routes, Route, Link } from "react-router-dom";
 import Auth from "./components/Authentication/Auth";
 import Registration from "./components/Registration/Registration";
+import React from "react";
+
+const MyContext = React.createContext({ online: false, userId: null });
 
 function App(props) {
   return (
@@ -11,8 +14,8 @@ function App(props) {
       <Routes>
         <Route path="/" element={<Preauthscreen />} />
         <Route path="/tasks" element={<Tasks />} />
-        <Route path="/auth" element={<Auth />}/>
-        <Route path="/reg" element={<Registration />}/>
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/reg" element={<Registration />} />
       </Routes>
     </div>
   );
