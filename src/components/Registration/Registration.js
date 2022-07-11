@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import s from "./registration.module.css";
 import { postUser } from "../../services/api";
 import { useNavigate } from "react-router-dom";
@@ -9,10 +9,8 @@ import {
   filterUserObjectFromPasswordMatch,
   setPasswordToFalse,
 } from "../Validators/users/user";
+import { UserContext } from "../UserContext";
 
-/* 
-  user data 
-  */
 const userStringInit = {
   username: "",
   name: "",
@@ -31,6 +29,10 @@ const userBooleanInit = {
 function Registration(props) {
   const [user, setUser] = useState(userStringInit);
   const [userBoolean, setUserBoolean] = useState(userBooleanInit);
+
+  /* context */
+  const current = useContext(UserContext);
+
   /* navigate to tasks if user is validated */
   const navigate = useNavigate();
 
@@ -39,32 +41,34 @@ function Registration(props) {
     const value = event.target.value;
     setUser({ ...user, [name]: value });
   }
+  async function backendCallandNavigateAndSetCurrentContext(validatedUser) {
+    let backendUser = "";
+    try {
+      backendUser = await postUser(validatedUser);
+      current.setCurrentUser({
+        isOnline: true,
+        id: backendUser.data._id,
+      });
+      navigate("/tasks", {replace : true});
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     if (isPasswordMatch(user)) {
       setUserBoolean(userBooleanInit);
       if (isEveryFieldTrue(isUser(filterUserObjectFromPasswordMatch(user)))) {
         let validatedUser = filterUserObjectFromPasswordMatch(user);
         setUser(userStringInit);
-        try {
-          postUser(validatedUser);
-          navigate("/tasks");
-        } catch (error) {
-          console.log(error);
-        }
+        backendCallandNavigateAndSetCurrentContext(validatedUser);
       } else {
-        /* 
-          if not every true
-          setUserBoolean needed fields to false values
-          */
+        /*if not every true setUserBoolean needed fields to false values */
         setUserBoolean(isUser(filterUserObjectFromPasswordMatch(user)));
       }
     } else {
-      /* 
-      passwords don't match
-      setPassword field to false 
-      */
+      /* passwords don't match,setPassword field to false */
       setUserBoolean(
         setPasswordToFalse(isUser(filterUserObjectFromPasswordMatch(user)))
       );

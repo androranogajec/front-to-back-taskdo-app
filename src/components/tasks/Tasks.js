@@ -13,7 +13,7 @@ import s from "./tasks.module.css";
 function Tasks(props) {
   const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState("");
-
+  console.log('props',props)
   useEffect(() => {
     handleGet();
   }, []);
@@ -25,7 +25,7 @@ function Tasks(props) {
   async function handleGet() {
     try {
       const { data } = await getAllTasks();
-      console.log(data)
+      /* console.log(data) */
       setTasks(data);
     } catch (error) {
       console.log(error);

@@ -1,0 +1,11 @@
+.wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.text {
+    color: #aa68e8;
+    font-size: 48px;
+}
