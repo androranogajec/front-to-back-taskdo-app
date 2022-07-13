@@ -29,6 +29,13 @@ const userSchema = new Schema({
   date: {
     type: Date,
     default: Date.now()
+  },
+  token: {
+    type: String
+  },
+  isOnline: {
+    type: Boolean,
+    default: true
   }
 });
 
