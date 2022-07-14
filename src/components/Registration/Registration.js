@@ -30,8 +30,8 @@ function Registration(props) {
   const [user, setUser] = useState(userStringInit);
   const [userBoolean, setUserBoolean] = useState(userBooleanInit);
 
-  /* context */
-  const current = useContext(UserContext);
+  /* token context */
+  const token = useContext(UserContext);
 
   /* navigate to tasks if user is validated */
   const navigate = useNavigate();
@@ -42,13 +42,11 @@ function Registration(props) {
     setUser({ ...user, [name]: value });
   }
   async function backendCallandNavigateAndSetCurrentContext(validatedUser) {
-    let backendUser = "";
+    let backendUser = {};
     try {
       backendUser = await postUser(validatedUser);
-      current.setCurrentUser({
-        isOnline: true,
-        id: backendUser.data._id,
-      });
+      //await the user with token from backend
+      token.setToken(backendUser.data.token);
       navigate("/tasks", {replace : true});
     } catch (error) {
       console.log(error);
