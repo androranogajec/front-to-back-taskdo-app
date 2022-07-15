@@ -1,9 +1,7 @@
 const UserModel = require("../models/userModel");
 const express = require("express");
 const userRouter = express();
-const userContoller = require("../controllers/userController");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const userController = require("../controllers/userController");
 require("dotenv").config();
 
 userRouter.get("/", async (req, res) => {
@@ -15,7 +13,15 @@ userRouter.get("/", async (req, res) => {
     res.end();
   }
 });
-
+userRouter.get("/isSemiGetTokenAndUserId", async (req, res) => {
+  if (await userController.get.isUser(req)) {
+    let token = userController.all.generateToken(req);
+    let userId = await userController.get.getUserId(req);
+    res.send({ token, userId });
+  } else {
+    res.send(false);
+  }
+});
 userRouter.get("/user/:id", async (req, res) => {
   const id = req.params.id;
   try {
@@ -30,37 +36,22 @@ userRouter.get("/user/:id", async (req, res) => {
 userRouter.post("/postUser", async (req, res) => {
   const user = new UserModel(req.body);
 
-  /* 
-  encrypt password 
-  */
-  userContoller.postUser.saltAndHashPassword(user);
+  /* encrypt password */
+  /*   userContoller.postUser.saltAndHashPassword(user); */
 
   try {
     await user.save();
     console.log(`Posted a new user `, user);
-   
   } catch (error) {
     console.log(error);
     res.end();
   }
 
-  /* 
-    token
-  */
-    let token = jwt.sign(
-      { userId: user._id, email: user.email },
-      process.env.SECRET,
-      {
-        expiresIn: "2h",
-      }
-    );
+  /* add token */
+  userController.all.generateToken(user);
 
-  /* 
-   add the token to the current user object send the user
-  */
-  user.token = token;
+  /* send */
   res.send(user);
-  
 });
 
 userRouter.delete("/deleteUser/:id", async (req, res) => {
