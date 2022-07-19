@@ -13,15 +13,16 @@ userRouter.get("/", async (req, res) => {
     res.end();
   }
 });
-userRouter.get("/isSemiGetTokenAndUserId", async (req, res) => {
+
+userRouter.post("/isSemiGetToken", async (req, res) => {
   if (await userController.get.isUser(req)) {
     let token = userController.all.generateToken(req);
-    let userId = await userController.get.getUserId(req);
-    res.send({ token, userId });
+    res.send({ token });
   } else {
     res.send(false);
   }
 });
+
 userRouter.get("/user/:id", async (req, res) => {
   const id = req.params.id;
   try {
@@ -35,10 +36,8 @@ userRouter.get("/user/:id", async (req, res) => {
 
 userRouter.post("/postUser", async (req, res) => {
   const user = new UserModel(req.body);
-
   /* encrypt password */
   /*   userContoller.postUser.saltAndHashPassword(user); */
-
   try {
     await user.save();
     console.log(`Posted a new user `, user);
