@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   postTask,
   getAllTasks,
@@ -9,11 +9,14 @@ import {
 import Input from "./Input";
 import Task from "../Task/Task";
 import s from "./tasks.module.css";
+import { UserContext } from "../UserContext";
 
 function Tasks(props) {
   const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState("");
-  console.log('props',props)
+  const tokenContext = useContext(UserContext);
+  console.log('token from Tasks: ', tokenContext.token);
+  
   useEffect(() => {
     handleGet();
   }, []);

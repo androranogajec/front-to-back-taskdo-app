@@ -51,3 +51,8 @@ API FOR USERS
 export function postUser(user){
   return axios.post(`${URL}/users/postUser`, user)
 }
+
+
+export function isSemiGetToken(user){
+  return axios.post(`${URL}/users/isSemiGetToken`,user);
+}

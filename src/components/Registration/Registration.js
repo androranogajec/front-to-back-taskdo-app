@@ -31,7 +31,7 @@ function Registration(props) {
   const [userBoolean, setUserBoolean] = useState(userBooleanInit);
 
   /* token context */
-  const token = useContext(UserContext);
+  const tokenContext = useContext(UserContext);
 
   /* navigate to tasks if user is validated */
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ function Registration(props) {
     try {
       backendUser = await postUser(validatedUser);
       //await the user with token from backend
-      token.setToken(backendUser.data.token);
+      tokenContext.setToken(backendUser.data.token);
       navigate("/tasks", {replace : true});
     } catch (error) {
       console.log(error);

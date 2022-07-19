@@ -10,8 +10,8 @@ import { useLocalStorage } from './components/Hooks/useLocalStorage';
 
 function App() {
   const [token, setToken] = useLocalStorage("token", "");
-  console.log('token: ', token)
-/*   window.localStorage.removeItem("token"); */
+  console.log('token from App: ', token);
+  /* window.localStorage.removeItem("token"); */
   return (
     <div className="App">
       <UserContext.Provider value={{ token: token, setToken: setToken }}>
