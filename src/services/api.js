@@ -1,7 +1,7 @@
 import axios from "axios";
 
 /* API URL */
-const URL = 'http://localhost:8080/api'; 
+const URL = "http://localhost:8080/api";
 
 /* 
 
@@ -10,7 +10,6 @@ API FOR TASKS
 
 
 */
-
 
 export function getAllTasks() {
   return axios.get(`${URL}/tasks`);
@@ -36,9 +35,6 @@ export function deleteAllTasksByUserId(userId) {
   return axios.delete(`${URL}/tasks/deleteAllTasksByUserId/${userId}`);
 }
 
-
-
-
 /* 
 
 
@@ -48,11 +44,14 @@ API FOR USERS
 
 */
 
-export function postUser(user){
-  return axios.post(`${URL}/users/postUser`, user)
+export function postUser(user) {
+  return axios.post(`${URL}/users/postUser`, user);
 }
-
-
-export function isSemiGetToken(user){
-  return axios.post(`${URL}/users/isSemiGetToken`,user);
+/* if user exists get token else return false */
+export function authentication(user) {
+  return axios.post(`${URL}/users/authentication`, user);
+}
+/* get user object with existing token  */
+export function login(token) {
+  return axios.get(`${URL}/users/login`, { headers: { token } });
 }

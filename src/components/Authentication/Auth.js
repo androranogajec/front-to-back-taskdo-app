@@ -9,7 +9,7 @@ import {
 } from "../Validators/users/user";
 import { UserContext } from "../UserContext";
 import { useState } from "react";
-import { isSemiGetToken } from "../../services/api";
+import { authentication } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
 const initUserString = { username: "", password: "" };
@@ -28,9 +28,10 @@ function Auth() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    let token = await isSemiGetToken(user);
+    /* if user exists get the token  */
+    let token = await authentication(user);
     if (token.data) {
-      tokenContext.setToken(token.data);
+      tokenContext.setToken(token.data.token);
       navigate("/tasks", {replace : true});
     } else {
       console.log(`user doesn't exist`);

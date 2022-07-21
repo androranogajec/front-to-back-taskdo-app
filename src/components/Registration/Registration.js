@@ -41,12 +41,11 @@ function Registration(props) {
     const value = event.target.value;
     setUser({ ...user, [name]: value });
   }
-  async function backendCallandNavigateAndSetCurrentContext(validatedUser) {
-    let backendUser = {};
+  async function backendCallandNavigateAndSetCurrentContextWithToken(validatedUser) {
     try {
-      backendUser = await postUser(validatedUser);
-      //await the user with token from backend
-      tokenContext.setToken(backendUser.data.token);
+      let token = await postUser(validatedUser);
+      //await the token from backend
+      tokenContext.setToken(token.data.token);
       navigate("/tasks", {replace : true});
     } catch (error) {
       console.log(error);
@@ -60,7 +59,7 @@ function Registration(props) {
       if (isEveryFieldTrue(isUser(filterUserObjectFromPasswordMatch(user)))) {
         let validatedUser = filterUserObjectFromPasswordMatch(user);
         setUser(userStringInit);
-        backendCallandNavigateAndSetCurrentContext(validatedUser);
+        backendCallandNavigateAndSetCurrentContextWithToken(validatedUser);
       } else {
         /*if not every true setUserBoolean needed fields to false values */
         setUserBoolean(isUser(filterUserObjectFromPasswordMatch(user)));

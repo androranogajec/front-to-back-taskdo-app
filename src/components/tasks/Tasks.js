@@ -5,18 +5,26 @@ import {
   getAllTasks,
   deleteTaskById,
   patchTask,
+  getAllTasksByUserId,
+  login
 } from "../../services/api";
 import Input from "./Input";
 import Task from "../Task/Task";
 import s from "./tasks.module.css";
 import { UserContext } from "../UserContext";
+import { removeTokenInTwoHours } from "../../services/auxiliar";
 
-function Tasks(props) {
+function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState("");
   const tokenContext = useContext(UserContext);
   console.log('token from Tasks: ', tokenContext.token);
-  
+/*   removeTokenInTwoHours() */
+
+
+/* 
+use effect is running twice ????
+*/
   useEffect(() => {
     handleGet();
   }, []);
@@ -27,8 +35,8 @@ function Tasks(props) {
 
   async function handleGet() {
     try {
-      const { data } = await getAllTasks();
-      /* console.log(data) */
+      const { data } = await login(tokenContext.token);
+      console.log(data)
       setTasks(data);
     } catch (error) {
       console.log(error);

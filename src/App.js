@@ -6,12 +6,15 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./components/Authentication/Auth";
 import Registration from "./components/Registration/Registration";
 import { UserContext } from "./components/UserContext";
-import { useLocalStorage } from './components/Hooks/useLocalStorage';
+import { useLocalStorage } from "./components/Hooks/useLocalStorage";
+import { removeTokenInTwoHours } from "./services/auxiliar";
 
 function App() {
   const [token, setToken] = useLocalStorage("token", "");
-  console.log('token from App: ', token);
-  /* window.localStorage.removeItem("token"); */
+  console.log("token from App: ", token);
+ /*  removeTokenInTwoHours(); */
+
+ 
   return (
     <div className="App">
       <UserContext.Provider value={{ token: token, setToken: setToken }}>
