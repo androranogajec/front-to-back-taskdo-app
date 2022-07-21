@@ -15,19 +15,19 @@ module.exports = {
     /* isCompareHashWithString:function(user){
     bcrypt.compareSync(user.password, );
    } */
-   getUserId: async function (req, res) {
-    try {
-      return await UserModel.findOne(
-        {
-          username: req.body.username,
-          password: req.body.password,
-        },
-        { _id: true }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  },
+    getUserId: async function (req, res) {
+      try {
+        return await UserModel.findOne(
+          {
+            username: req.body.username,
+            password: req.body.password,
+          },
+          { _id: true }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   get: {
     isUser: async function (req, res) {
@@ -45,13 +45,26 @@ module.exports = {
         console.log(error);
       }
     },
-   
+    userByUsernameAndPassword: async function (verify) {
+      try {
+        return await UserModel.findOne({
+          username: verify.username,
+          password: verify.password,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   all: {
     generateToken: function (req) {
-      let token = jwt.sign({ userId: req.body._id }, process.env.SECRET, {
-        expiresIn: "2h",
-      });
+      let token = jwt.sign(
+        { username: req.body.username, password: req.body.password },
+        process.env.SECRET,
+        {
+          expiresIn: "2h",
+        }
+      );
       return token;
     },
   },
