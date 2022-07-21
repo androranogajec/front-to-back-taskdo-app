@@ -22,25 +22,9 @@ function Tasks() {
 /*   removeTokenInTwoHours() */
 
 
-/* 
-use effect is running twice ????
-*/
-  useEffect(() => {
-    handleGet();
-  }, []);
 
   function handleInputChange(event) {
     setCurrentTask(event.target.value);
-  }
-
-  async function handleGet() {
-    try {
-      const { data } = await login(tokenContext.token);
-      console.log(data)
-      setTasks(data);
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   async function handlePost(event) {

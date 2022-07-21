@@ -11,7 +11,9 @@ import { UserContext } from "../UserContext";
 import { useState } from "react";
 import { authentication } from "../../services/api";
 import { useNavigate } from "react-router-dom";
-
+import {
+  login
+} from "../../services/api";
 const initUserString = { username: "", password: "" };
 
 
@@ -26,12 +28,22 @@ function Auth() {
     setUser({ ...user, [name]: value });
   }
 
+
+  async function getUser() {
+    try {
+      const { data } = await login(tokenContext.token);
+      console.log(data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async function handleSubmit(event) {
     event.preventDefault();
     /* if user exists get the token  */
     let token = await authentication(user);
     if (token.data) {
       tokenContext.setToken(token.data.token);
+      getUser();
       navigate("/tasks", {replace : true});
     } else {
       console.log(`user doesn't exist`);
