@@ -51,7 +51,7 @@ export function postUser(user) {
 export function authentication(user) {
   return axios.post(`${URL}/users/authentication`, user);
 }
-/* get user object with existing token  */
+/* get user object with token from authentication  */
 export function login(token) {
   return axios.get(`${URL}/users/login`, { headers: { token } });
 }

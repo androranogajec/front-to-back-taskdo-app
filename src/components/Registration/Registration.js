@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import s from "./registration.module.css";
 import { postUser } from "../../services/api";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,8 @@ import {
   filterUserObjectFromPasswordMatch,
   setPasswordToFalse,
 } from "../Validators/users/user";
-import { UserContext } from "../UserContext";
+import { removeTokenInTwoHours } from "../../services/auxiliar";
+import { useLocalStorage } from "../Hooks/useLocalStorage";
 
 const userStringInit = {
   username: "",
@@ -29,10 +30,8 @@ const userBooleanInit = {
 function Registration(props) {
   const [user, setUser] = useState(userStringInit);
   const [userBoolean, setUserBoolean] = useState(userBooleanInit);
-
-  /* token context */
-  const tokenContext = useContext(UserContext);
-
+  const [token, setToken] = useLocalStorage("token", "");
+  
   /* navigate to tasks if user is validated */
   const navigate = useNavigate();
 
@@ -41,12 +40,14 @@ function Registration(props) {
     const value = event.target.value;
     setUser({ ...user, [name]: value });
   }
-  async function backendCallandNavigateAndSetCurrentContextWithToken(validatedUser) {
+  async function backendCallandNavigateAndSetCurrentContextWithToken(
+    validatedUser
+  ) {
     try {
-      let token = await postUser(validatedUser);
       //await the token from backend
-      tokenContext.setToken(token.data.token);
-      navigate("/tasks", {replace : true});
+      let token = await postUser(validatedUser);
+      setToken(token.data);
+      navigate("/tasks", { replace: true });
     } catch (error) {
       console.log(error);
     }

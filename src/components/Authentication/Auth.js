@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import s from "./auth.module.css";
 import {
   isUser,
@@ -7,46 +6,49 @@ import {
   filterUserObjectFromPasswordMatch,
   setPasswordToFalse,
 } from "../Validators/users/user";
-import { UserContext } from "../UserContext";
 import { useState } from "react";
 import { authentication } from "../../services/api";
 import { useNavigate } from "react-router-dom";
-import {
-  login
-} from "../../services/api";
-const initUserString = { username: "", password: "" };
+import { login } from "../../services/api";
+import { useLocalStorage } from "../Hooks/useLocalStorage";
 
+const initUserString = { username: "", password: "" };
 
 function Auth() {
   const [user, setUser] = useState(initUserString);
-  const tokenContext = useContext(UserContext);
+  const [token, setToken] = useLocalStorage("token", "");
+  console.log('token auth',token);
+ /*  window.localStorage.clear('token') */
   const navigate = useNavigate();
-  
+
   function handleInputChange(event) {
     let name = event.target.name;
     let value = event.target.value;
     setUser({ ...user, [name]: value });
   }
-
-
-  async function getUser() {
+  
+  async function getUser(token) {
     try {
-      const { data } = await login(tokenContext.token);
-      console.log(data)
+      const { data } = await login(token);
+    console.log(data)
     } catch (error) {
       console.log(error);
     }
   }
   async function handleSubmit(event) {
     event.preventDefault();
-    /* if user exists get the token  */
-    let token = await authentication(user);
-    if (token.data) {
-      tokenContext.setToken(token.data.token);
-      getUser();
-      navigate("/tasks", {replace : true});
-    } else {
-      console.log(`user doesn't exist`);
+    try {
+      let token = await authentication(user);
+      if (token.data) {
+        setToken(token.data)
+        getUser(token.data);
+       /*  navigate("/tasks", { replace: true }); */
+      } else {
+        console.log(`user doesn't exist`);
+      }
+      console.log(token)
+    } catch (error) {
+      console.log(error);
     }
   }
 
