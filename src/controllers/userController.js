@@ -57,15 +57,20 @@ module.exports = {
     },
   },
   all: {
-    generateToken: function (req) {
+    generateToken: function (user) {
       let token = jwt.sign(
-        { username: req.body.username, password: req.body.password },
+        { username: user.username, password: user.password },
         process.env.SECRET,
         {
           expiresIn: "2h",
         }
       );
       return token;
+    },
+    sendToken: function (user,res) {
+      const token = this.generateToken(user);
+      console.log({ token });
+      res.send(token);
     },
   },
 };

@@ -22,19 +22,18 @@ userRouter.get("/login", async (req, res) => {
   try {
     const verify = jwt.verify(token, process.env.SECRET);
     const user = await userController.get.userByUsernameAndPassword(verify);
-    console.log(user);
+    res.send(user);
   } catch (error) {
     res.send(error);
     console.log(error);
   }
-  
 });
 
 /* when auth if user exists return token or false */
 userRouter.post("/authentication", async (req, res) => {
+  const user = req.body;
   if (await userController.get.isUser(req)) {
-    let token = userController.all.generateToken(req);
-    res.send({ token });
+    userController.all.sendToken(user, res);
   } else {
     res.send(false);
   }
@@ -55,21 +54,20 @@ userRouter.get("/user/:id", async (req, res) => {
 /* post a user */
 userRouter.post("/postUser", async (req, res) => {
   const user = new UserModel(req.body);
+  console.log(user);
   /* encrypt password */
-  /*   userContoller.postUser.saltAndHashPassword(user); */
+  /*  userController.post.saltAndHashPassword(user); */
+
+  /* save to the db */
   try {
     await user.save();
     console.log(`Posted a new user `, user);
+    /* add token and send it*/
+    userController.all.sendToken(user, res);
   } catch (error) {
     console.log(error);
     res.end();
   }
-
-  /* add token */
-  userController.all.generateToken(user);
-
-  /* send */
-  res.send(user);
 });
 
 userRouter.delete("/deleteUser/:id", async (req, res) => {
