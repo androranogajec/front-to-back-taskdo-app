@@ -30,9 +30,6 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now()
   },
-  token: {
-    type: String
-  },
   isOnline: {
     type: Boolean,
     default: true
