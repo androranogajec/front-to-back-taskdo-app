@@ -56,7 +56,7 @@ module.exports = {
   all: {
     generateAccessToken: function (userId) {
       let accessToken = jwt.sign({ userId }, process.env.SECRET, {
-        expiresIn: "45s",
+        expiresIn: "1m",
       });
       return accessToken;
     },

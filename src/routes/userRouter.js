@@ -8,16 +8,42 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 /* get all users */
-userRouter.get("", verify, async (req, res) => {
+userRouter.get("", refreshController.verify, async (req, res) => {
   try {
     const users = await UserModel.find({});
-    res.send(users);
+    res.send({ users });
   } catch (error) {
     console.log(error);
     res.end();
   }
 });
 
+/* refresh */
+userRouter.post("/refresh", async (req, res) => {
+  let userId = "test";
+  try {
+    let refreshToken = await refreshController.get();
+    await refreshController.delete();
+    if (!refreshToken[0].refreshToken) {
+      res.status(401).send("your are not authenticated");
+    } else {
+      accessToken = userController.all.generateAccessToken(userId);
+      refreshToken = userController.all.generateRefreshToken(userId);
+      refreshController.save(req, refreshToken, userId);
+      res.send({ accessToken });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+/* logout */
+userRouter.post("/logout", refreshController.verify, async (req, res) => {
+  let userId = req.body.userId;
+  refreshController.delete();
+  res.send("you have been logged out");
+});
+  
 /* login */
 userRouter.post("/login", async (req, res) => {
   let userId = "";
@@ -28,31 +54,18 @@ userRouter.post("/login", async (req, res) => {
       userId = await userController.post.getUserId(req);
       accessToken = userController.all.generateAccessToken(userId);
       refreshToken = userController.all.generateRefreshToken(userId);
-      refreshController.save(req, refreshToken);
+      refreshController.save(req, refreshToken, userId);
+      req.headers.accessToken = accessToken;
       res.send({ userId, accessToken });
     } else {
-      res.status(500).send(`user doesn't exist`);
+      res.status(500).send(`no user found`);
     }
   } catch (error) {
     res.send(error);
   }
 });
 
-function verify(req, res, next) {
-  let token = req.headers.authorization;
-  if (token) {
-    token = token.split(" ")[1];
-    jwt.verify(token, process.env.SECRET, (error, payload) => {
-      if (error) {
-        return res.status(403).send("token is not valid");
-      }
-      req.payload = payload;
-      next();
-    });
-  } else {
-    res.status(401).send("your are not authenticated");
-  }
-}
+
 
 /* get user by id */
 userRouter.get("/user/:id", async (req, res) => {
