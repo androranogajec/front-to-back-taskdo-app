@@ -1,8 +1,8 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const cors = require("cors");
+import cors from "cors";
 const port = 8080;
-const connection = require("./database");
+import connection from "./database";
 const indexRouter = require("./routes/indexRouter")
 
 /* Connection to the mongodb */
