@@ -3,7 +3,7 @@ const app = express();
 import cors from "cors";
 const port = 8080;
 import connection from "./database";
-const indexRouter = require("./routes/indexRouter")
+import indexRouter from "./routes/indexRouter";
 
 /* Connection to the mongodb */
 connection();

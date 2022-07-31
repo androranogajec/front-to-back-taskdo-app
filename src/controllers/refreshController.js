@@ -45,7 +45,7 @@ module.exports = {
       let token = header.split(" ")[1];
       jwt.verify(token, process.env.SECRET, (err, data) => {
         if (err) {
-          res.status(500).send("token has expired");
+          res.status(500).send("the token has expired");
           return;
         }
         return next();

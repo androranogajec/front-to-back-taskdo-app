@@ -1,17 +1,17 @@
-const UserModel = require("../models/userModel");
-const express = require("express");
+import UserModel from "../models/userModel";
+import express from "express";
 const userRouter = express();
-const userController = require("../controllers/userController");
+import userController from "../controllers/userController";
 const refreshController = require("../controllers/refreshController");
-const jwt = require("jsonwebtoken");
+import dotenv from "dotenv";
 
-require("dotenv").config();
+dotenv.config({ path: `${__dirname}/.env` });
 
 /* get all users */
-userRouter.get("", refreshController.verify, async (req, res) => {
+userRouter.get("", refreshController.verify, async (req: express.Request, res: express.Response) => {
   try {
-    const users = await UserModel.find({});
-    res.send({ users });
+    const users: Object = await UserModel.find({});
+    res.send(users);
   } catch (error) {
     console.log(error);
     res.end();
@@ -19,8 +19,9 @@ userRouter.get("", refreshController.verify, async (req, res) => {
 });
 
 /* refresh */
-userRouter.post("/refresh", async (req, res) => {
-  let userId = "test";
+userRouter.post("/refresh", async (req: express.Request, res: express.Response) => {
+  let userId: string = "test";
+  let accessToken: string = "";
   try {
     let refreshToken = await refreshController.get();
     await refreshController.delete();
@@ -38,20 +39,20 @@ userRouter.post("/refresh", async (req, res) => {
 });
 
 /* logout */
-userRouter.post("/logout", refreshController.verify, async (req, res) => {
-  let userId = req.body.userId;
+userRouter.post("/logout", refreshController.verify, async (req: express.Request, res: express.Response) => {
+  let userId: string = req.body.userId;
   refreshController.delete();
   res.send("you have been logged out");
 });
-  
+
 /* login */
-userRouter.post("/login", async (req, res) => {
-  let userId = "";
-  let accessToken = "";
-  let refreshToken = "";
+userRouter.post("/login", async (req: express.Request, res: express.Response) => {
+  let userId: string = "";
+  let accessToken: string = "";
+  let refreshToken: string = "";
   try {
-    if (await userController.post.isUser(req)) {
-      userId = await userController.post.getUserId(req);
+    if (await userController.post.isUser(req,res)) {
+      userId = await userController.post.getUserId(req,res);
       accessToken = userController.all.generateAccessToken(userId);
       refreshToken = userController.all.generateRefreshToken(userId);
       refreshController.save(req, refreshToken, userId);
@@ -65,11 +66,9 @@ userRouter.post("/login", async (req, res) => {
   }
 });
 
-
-
 /* get user by id */
-userRouter.get("/user/:id", async (req, res) => {
-  const id = req.params.id;
+userRouter.get("/user/:id", async (req: express.Request, res: express.Response) => {
+  const id: string = req.params.id;
   try {
     const user = await UserModel.findById(id);
     res.send(user);
@@ -80,7 +79,7 @@ userRouter.get("/user/:id", async (req, res) => {
 });
 
 /* post a user */
-userRouter.post("/postUser", async (req, res) => {
+userRouter.post("/postUser", async (req: express.Request, res: express.Response) => {
   const user = new UserModel(req.body);
   console.log(user);
   /* save to the db */
@@ -94,8 +93,8 @@ userRouter.post("/postUser", async (req, res) => {
   }
 });
 
-userRouter.delete("/deleteUser/:id", async (req, res) => {
-  const _id = req.params.id;
+userRouter.delete("/deleteUser/:id", async (req: express.Request, res: express.Response) => {
+  const _id: string = req.params.id;
   try {
     await UserModel.findByIdAndDelete(_id);
     console.log(`User with id: ${_id} was deleted`);
@@ -106,8 +105,8 @@ userRouter.delete("/deleteUser/:id", async (req, res) => {
   }
 });
 
-userRouter.patch("/patchUser/:id", async (req, res) => {
-  const id = req.params.id;
+userRouter.patch("/patchUser/:id", async (req: express.Request, res: express.Response) => {
+  const id: string = req.params.id;
   let body = req.body;
   try {
     await UserModel.findByIdAndUpdate(id, body);
@@ -118,4 +117,4 @@ userRouter.patch("/patchUser/:id", async (req, res) => {
   }
 });
 
-module.exports = userRouter;
+export default userRouter;

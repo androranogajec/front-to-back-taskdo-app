@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const indexRouter = express();
-const userRouter = require("./userRouter");
+import userRouter from "./userRouter";
 const taskRouter = require("./taskRouter");
 const refreshRouter = require("./refreshRouter");
 
@@ -9,4 +9,5 @@ const refreshRouter = require("./refreshRouter");
 indexRouter.use("/tasks", taskRouter);
 indexRouter.use('/users', userRouter);
 indexRouter.use('/refresh', refreshRouter);
-module.exports = indexRouter;
+
+export default indexRouter;

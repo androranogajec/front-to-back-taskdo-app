@@ -1,17 +1,21 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const UserModel = require("../models/userModel");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import UserModel from "../models/userModel";
+import dotenv from "dotenv";
+import User from "../types/User";
+import express from "express";
 
-require("dotenv").config();
-module.exports = {
+dotenv.config({ path: `${__dirname}/.env` })
+
+export default {
   post: {
-    saltAndHashPassword: function (user) {
+    saltAndHashPassword: function (user: User) {
       let salt = bcrypt.genSaltSync(10);
       let hash = bcrypt.hashSync(user.password, salt);
       user.password = hash;
       return user;
     },
-    getUserId: async function (req, res) {
+    getUserId: async function (req: express.Request, res: express.Response) {
       try {
         let id = await UserModel.findOne(
           {
@@ -26,7 +30,7 @@ module.exports = {
         console.log(error);
       }
     },
-    isUser: async function (req, res) {
+    isUser: async function (req: express.Request, res: express.Response) {
       try {
         let user = await UserModel.findOne({
           username: req.body.username,
@@ -41,7 +45,7 @@ module.exports = {
         console.log(error);
       }
     },
-    userByUsernameAndPassword: async function (verify) {
+    userByUsernameAndPassword: async function (verify: User) {
       try {
         return await UserModel.findOne({
           username: verify.username,
@@ -54,14 +58,14 @@ module.exports = {
   },
   get: {},
   all: {
-    generateAccessToken: function (userId) {
-      let accessToken = jwt.sign({ userId }, process.env.SECRET, {
+    generateAccessToken: function (userId: string) {
+      let accessToken = jwt.sign({ userId }, process.env.SECRET as string, {
         expiresIn: "1m",
       });
       return accessToken;
     },
-    generateRefreshToken: function (userId) {
-      let refreshToken = jwt.sign({ userId }, process.env.SECRET);
+    generateRefreshToken: function (userId: string) {
+      let refreshToken = jwt.sign({ userId }, process.env.SECRET as string);
       return refreshToken;
     },
   },
