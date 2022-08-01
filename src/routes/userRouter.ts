@@ -5,7 +5,7 @@ import userController from "../controllers/userController";
 import refreshController from "../controllers/refreshController";
 import dotenv from "dotenv";
 import { Type } from "typescript";
-
+import RefreshModel from "../models/refreshModel";
 dotenv.config({ path: `${__dirname}/.env` });
 
 /* get all users */
@@ -20,19 +20,18 @@ userRouter.get("", refreshController.verify, async (req: express.Request, res: e
 });
 
 /* refresh */
-userRouter.post("/refresh", async (req: express.Request, res: express.Response) => { 
+userRouter.post("/refresh", async (req: express.Request, res: express.Response) => {
   let userId: string = "test";
   let accessToken: string = "";
   try {
     let refreshToken: any = await refreshController.get(res);
-  
     await refreshController.delete(res);
     if (!refreshToken[0].refreshToken) {
       res.status(401).send("your are not authenticated");
     } else {
       accessToken = userController.all.generateAccessToken(userId);
       refreshToken = userController.all.generateRefreshToken(userId);
-      refreshController.save(req,res, refreshToken, userId);
+      refreshController.save(req, res, refreshToken, userId);
       res.send({ accessToken });
     }
   } catch (error) {
@@ -42,9 +41,10 @@ userRouter.post("/refresh", async (req: express.Request, res: express.Response) 
 
 /* logout */
 userRouter.post("/logout", refreshController.verify, async (req: express.Request, res: express.Response) => {
-  let userId: string = req.body.userId;
-  refreshController.delete(res);
-  res.send("you have been logged out");
+    let userId: string = req.body.userId;
+    refreshController.deleteById(userId,res);
+    res.send("you have been logged out");
+
 });
 
 /* login */
@@ -53,13 +53,13 @@ userRouter.post("/login", async (req: express.Request, res: express.Response) =>
   let accessToken: string = "";
   let refreshToken: string = "";
   try {
-    if (await userController.post.isUser(req,res)) {
-      userId = await userController.post.getUserId(req,res);
+    if (await userController.post.isUser(req, res)) {
+      userId = await userController.post.getUserId(req, res);
       accessToken = userController.all.generateAccessToken(userId);
       refreshToken = userController.all.generateRefreshToken(userId);
-      refreshController.save(req,res, refreshToken, userId);
-      req.headers.accessToken = accessToken;
-      res.send({ userId, accessToken });
+      refreshController.save(req, res, refreshToken, userId);
+      let bearer: string = `Bearer ${accessToken}`;
+      res.send({ userId, bearer });
     } else {
       res.status(500).send(`no user found`);
     }

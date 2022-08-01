@@ -6,6 +6,9 @@ export default {
   save: async function (req: express.Request, res: express.Response, refreshToken: string, userId: string) {
     req.body.refreshToken = refreshToken;
     req.body.userId = userId;
+    if (await RefreshModel.findOne({ userId })) {
+      return
+    }
     try {
       const refresh = await new RefreshModel(req.body);
       await refresh.save();
@@ -36,6 +39,22 @@ export default {
     try {
       await RefreshModel.findOneAndDelete({});
       console.log("Refresh token has been deleted");
+    } catch (error) {
+      res.send(error);
+    }
+  },
+  deleteById: async function (userId: string, res: express.Response) {
+    if (!userId) {
+      res.send('userId was not found');
+    }
+    try {
+      await RefreshModel.findOneAndRemove({ userId }, function (error: Error, callback: any) {
+        if (error) {
+          res.send(error);
+          return;
+        }
+        console.log('Refresh token has been deleted')
+      }).clone()
     } catch (error) {
       res.send(error);
     }

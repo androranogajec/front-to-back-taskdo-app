@@ -60,7 +60,7 @@ export default {
   all: {
     generateAccessToken: function (userId: string) {
       let accessToken = jwt.sign({ userId }, process.env.SECRET as string, {
-        expiresIn: "1m",
+        expiresIn: "30m",
       });
       return accessToken;
     },
