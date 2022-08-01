@@ -7,7 +7,6 @@ import {
   setPasswordToFalse,
 } from "../Validators/users/user";
 import { useState } from "react";
-import { authentication } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/api";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
@@ -17,8 +16,8 @@ const initUserString = { username: "", password: "" };
 function Auth() {
   const [user, setUser] = useState(initUserString);
   const [token, setToken] = useLocalStorage("token", "");
-  console.log('token auth',token);
- /*  window.localStorage.clear('token') */
+  console.log("token auth", token);
+  /*  window.localStorage.clear('token') */
   const navigate = useNavigate();
 
   function handleInputChange(event) {
@@ -26,27 +25,13 @@ function Auth() {
     let value = event.target.value;
     setUser({ ...user, [name]: value });
   }
-  
-  async function getUser(token) {
-    try {
-      const { data } = await login(token);
-    console.log(data)
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      let token = await authentication(user);
-      if (token.data) {
-        setToken(token.data)
-        getUser(token.data);
-       /*  navigate("/tasks", { replace: true }); */
-      } else {
-        console.log(`user doesn't exist`);
-      }
-      console.log(token)
+      let tokenAndUserId = await login(user);
+      setToken(tokenAndUserId.data);
+      navigate("/tasks", { replace: true });
     } catch (error) {
       console.log(error);
     }

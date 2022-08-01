@@ -47,11 +47,7 @@ API FOR USERS
 export function postUser(user) {
   return axios.post(`${URL}/users/postUser`, user);
 }
-/* if user exists get token else return false */
-export function authentication(user) {
-  return axios.post(`${URL}/users/authentication`, user);
-}
-/* get user object with token from authentication  */
-export function login(token) {
-  return axios.get(`${URL}/users/login`, { headers: { token } });
+/* login */
+export function login(user){
+  return axios.post(`${URL}/users/login`, user)
 }

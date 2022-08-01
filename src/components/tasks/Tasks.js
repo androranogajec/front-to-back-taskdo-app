@@ -6,7 +6,7 @@ import {
   deleteTaskById,
   patchTask,
   getAllTasksByUserId,
-  login
+  login,
 } from "../../services/api";
 import Input from "./Input";
 import Task from "../Task/Task";
@@ -60,44 +60,53 @@ function Tasks() {
         if (e.completed) {
           e.completed = false;
           completed = false;
-       
         } else {
           e.completed = true;
-          completed = true
+          completed = true;
         }
-
       }
-      console.log(completed)
+      console.log(completed);
     });
     /* ошибка в том что я обновляю стейт локально но не отсылаю на бэк по итогу расинхрон */
     try {
-    
-      await patchTask(id, { completed } );
-   /*    setTasks(tasksCopy) */
-  
+      await patchTask(id, { completed });
+      /*    setTasks(tasksCopy) */
     } catch (error) {
       console.log(error);
     }
   }
   return (
-    <div className={s.flexContainer}>
-      <Input
+    <div className={s.gridContainer}>
+      <div className={s.a}>
+        <div className={s.userData}>
+          <div>avatar</div>
+          <div>name</div>
+          <div>pending</div>
+        </div>
+        <div className={s.title}>TaskDo</div>
+       
+          <div className={s.logout}>Logout</div>
+        
+      </div>
+      <div className={s.b}>BBBBBBBBB</div>
+
+      {/*   <Input
         currentTask={currentTask}
         handlePost={handlePost}
         handleInputChange={handleInputChange}
-      />
-      {tasks.map((value, index) => {
+      /> */}
+      {/*   {tasks.map((value, index) => {
         console.log(value);
         return (
-          /*   <Task
+            <Task
             value={value}
             handleDelete={handleDelete}
             handlePatch={handlePatch}
             key={value._id}
-          /> */
+          />
           <div key={value._id}>
             <img
-              /*   src={logo} */
+                src={logo}
               alt="logo"
               onClick={() => handleDelete(value._id)}
             />
@@ -107,7 +116,7 @@ function Tasks() {
             </span>
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { useEffect } from "react";
 
 function App() {
   const [token, setToken] = useLocalStorage("token", "");
+  console.log(token)
  /*  window.localStorage.removeItem("token"); */
   return (
     <div className="App">
