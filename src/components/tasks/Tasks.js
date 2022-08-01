@@ -11,8 +11,7 @@ import {
 import Input from "./Input";
 import Task from "../Task/Task";
 import s from "./tasks.module.css";
-import { removeTokenInTwoHours } from "../../services/auxiliar";
-
+import Header from './Header'
 function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState("");
@@ -75,19 +74,10 @@ function Tasks() {
       console.log(error);
     }
   }
+
   return (
     <div className={s.gridContainer}>
-      <div className={s.a}>
-        <div className={s.userData}>
-          <div>avatar</div>
-          <div>name</div>
-          <div>pending</div>
-        </div>
-        <div className={s.title}>TaskDo</div>
-       
-          <div className={s.logout}>Logout</div>
-        
-      </div>
+      <Header/>
       <div className={s.b}>BBBBBBBBB</div>
 
       {/*   <Input

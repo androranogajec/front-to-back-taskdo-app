@@ -48,6 +48,13 @@ export function postUser(user) {
   return axios.post(`${URL}/users/postUser`, user);
 }
 /* login */
-export function login(user){
-  return axios.post(`${URL}/users/login`, user)
+export function login(user) {
+  return axios.post(`${URL}/users/login`, user);
+}
+
+/* logout */
+export function logout(userId, accessToken) {
+  return axios.post(`${URL}/users/logout`, userId, {
+    headers: { authorization: accessToken },
+  });
 }

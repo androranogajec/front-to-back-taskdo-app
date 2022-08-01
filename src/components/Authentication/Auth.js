@@ -13,7 +13,8 @@ import { useLocalStorage } from "../Hooks/useLocalStorage";
 
 const initUserString = { username: "", password: "" };
 
-function Auth() {
+function Auth(props) {
+  console.log(props);
   const [user, setUser] = useState(initUserString);
   const [token, setToken] = useLocalStorage("token", "");
   console.log("token auth", token);
@@ -30,8 +31,12 @@ function Auth() {
     event.preventDefault();
     try {
       let tokenAndUserId = await login(user);
+      console.log(tokenAndUserId)
       setToken(tokenAndUserId.data);
-      navigate("/tasks", { replace: true });
+      props.setToken(tokenAndUserId.data);
+        navigate("/tasks", { replace: true });
+     
+      
     } catch (error) {
       console.log(error);
     }
