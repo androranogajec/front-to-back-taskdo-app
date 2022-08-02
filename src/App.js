@@ -6,15 +6,13 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./components/Authentication/Auth";
 import Registration from "./components/Registration/Registration";
 import { useLocalStorage } from "./components/Hooks/useLocalStorage";
-import { removeTokenInTwoHours } from "./services/auxiliar";
-import { useState } from "react";
+
 
 function App() {
   const [token, setToken] = useLocalStorage("token","");
   console.log('app token', token);
 
-  /* пустая страница с лод баром которая будет ждать токен, useeffect useCallback */
-  /* window.localStorage.removeItem("token"); */
+/*   window.localStorage.removeItem("token"); */
 
   return (
     <div className="App">
@@ -23,7 +21,7 @@ function App() {
           <Route path="/" element={<Preauthscreen />} />
           <Route path="/auth" element={<Auth setToken={setToken}/>} />
           <Route path="/reg" element={<Registration />} />
-          {token && <Route path="/tasks" element={<Tasks />} />}
+          {token && <Route path="/tasks" element={<Tasks setToken={setToken}/>} />}
           <Route path="*" element={<Navigate to="/nomatch" />} />
         </Routes>
     </div>

@@ -9,7 +9,6 @@ import {
   filterUserObjectFromPasswordMatch,
   setPasswordToFalse,
 } from "../Validators/users/user";
-import { removeTokenInTwoHours } from "../../services/auxiliar";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
 
 const userStringInit = {
@@ -30,8 +29,7 @@ const userBooleanInit = {
 function Registration(props) {
   const [user, setUser] = useState(userStringInit);
   const [userBoolean, setUserBoolean] = useState(userBooleanInit);
-  const [token, setToken] = useLocalStorage("token", "");
-  
+
   /* navigate to tasks if user is validated */
   const navigate = useNavigate();
 
@@ -46,7 +44,7 @@ function Registration(props) {
     try {
       //await the token from backend
       let token = await postUser(validatedUser);
-      setToken(token.data);
+      props.setToken(token.data);
       navigate("/tasks", { replace: true });
     } catch (error) {
       console.log(error);

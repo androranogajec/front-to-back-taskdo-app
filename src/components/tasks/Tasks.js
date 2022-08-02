@@ -12,7 +12,7 @@ import Input from "./Input";
 import Task from "../Task/Task";
 import s from "./tasks.module.css";
 import Header from './Header'
-function Tasks() {
+function Tasks(props) {
   const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState("");
 
@@ -77,7 +77,7 @@ function Tasks() {
 
   return (
     <div className={s.gridContainer}>
-      <Header/>
+      <Header setToken={props.setToken}/>
       <div className={s.b}>BBBBBBBBB</div>
 
       {/*   <Input

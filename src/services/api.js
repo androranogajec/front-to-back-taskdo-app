@@ -3,6 +3,12 @@ import axios from "axios";
 /* API URL */
 const URL = "http://localhost:8080/api";
 
+
+
+
+
+
+
 /* 
 
 
@@ -44,17 +50,41 @@ API FOR USERS
 
 */
 
+/* get all users */
+export function getAllUsers(token, axiosJWT) {
+  return axiosJWT.get(`${URL}/users`, {
+    headers: { authorization: token },
+  });
+}
+
 export function postUser(user) {
   return axios.post(`${URL}/users/postUser`, user);
 }
+
 /* login */
 export function login(user) {
   return axios.post(`${URL}/users/login`, user);
 }
 
 /* logout */
-export function logout(userId, accessToken) {
-  return axios.post(`${URL}/users/logout`, userId, {
-    headers: { authorization: accessToken },
-  });
+export function logout(userId, accessToken, axiosJWT) {
+  return axiosJWT.post(
+    `${URL}/users/logout`,
+    { userId },
+    {
+      headers: { authorization: accessToken },
+    }
+  );
+}
+
+/* 
+
+
+TOKEN
+
+
+*/
+
+export function refreshToken(userId) {
+  return axios.post(`${URL}/users/refresh`, { userId });
 }
