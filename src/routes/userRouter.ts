@@ -21,19 +21,21 @@ userRouter.get("", refreshController.verify, async (req: express.Request, res: e
 
 /* refresh */
 userRouter.post("/refresh", async (req: express.Request, res: express.Response) => {
-  let userId: string = "test";
+  let userId: string = req.body.userId;
   let accessToken: string = "";
+  let refreshToken: any = await refreshController.getById(res, userId);
+  if (!refreshToken) {
+    res.end();
+    return;
+  }
   try {
-    let refreshToken: any = await refreshController.get(res);
-    await refreshController.delete(res);
-    if (!refreshToken[0].refreshToken) {
-      res.status(401).send("your are not authenticated");
-    } else {
-      accessToken = userController.all.generateAccessToken(userId);
-      refreshToken = userController.all.generateRefreshToken(userId);
-      refreshController.save(req, res, refreshToken, userId);
-      res.send({ accessToken });
-    }
+    await refreshController.deleteById(userId, res);
+    console.log(refreshToken);
+    accessToken = userController.all.generateAccessToken(userId);
+    refreshToken = userController.all.generateRefreshToken(userId);
+    refreshController.save(req, res, refreshToken, userId);
+    accessToken = `Bearer ${accessToken}`;
+    res.send({ accessToken });
   } catch (error) {
     res.send(error);
   }
@@ -41,9 +43,9 @@ userRouter.post("/refresh", async (req: express.Request, res: express.Response) 
 
 /* logout */
 userRouter.post("/logout", refreshController.verify, async (req: express.Request, res: express.Response) => {
-    let userId: string = req.body.userId;
-    refreshController.deleteById(userId,res);
-    res.send("you have been logged out");
+  let userId: string = req.body.userId;
+  refreshController.deleteById(userId, res);
+  res.send("you have been logged out");
 
 });
 
@@ -58,8 +60,8 @@ userRouter.post("/login", async (req: express.Request, res: express.Response) =>
       accessToken = userController.all.generateAccessToken(userId);
       refreshToken = userController.all.generateRefreshToken(userId);
       refreshController.save(req, res, refreshToken, userId);
-      let bearer: string = `Bearer ${accessToken}`;
-      res.send({ userId, bearer });
+      accessToken = `Bearer ${accessToken}`;
+      res.send({ userId, accessToken });
     } else {
       res.status(500).send(`no user found`);
     }
@@ -83,15 +85,22 @@ userRouter.get("/user/:id", async (req: express.Request, res: express.Response) 
 /* post a user */
 userRouter.post("/postUser", async (req: express.Request, res: express.Response) => {
   const user = new UserModel(req.body);
-  console.log(user);
+  let userId: string = "";
+  let accessToken: string = "";
+  let refreshToken: string = "";
   /* save to the db */
   try {
     await user.save();
     console.log(`Posted a new user `, user);
+    userId = await userController.post.getUserId(req, res);
+    accessToken = userController.all.generateAccessToken(userId);
+    refreshToken = userController.all.generateRefreshToken(userId);
+    refreshController.save(req, res, refreshToken, userId);
+    let bearer: string = `Bearer ${accessToken}`;
+    res.send({ userId, bearer });
     /* add token and send it*/
   } catch (error) {
-    console.log(error);
-    res.end();
+    res.send(error);
   }
 });
 

@@ -2,6 +2,7 @@ import RefreshModel from "../models/refreshModel";
 import jwt from "jsonwebtoken";
 import express from 'express';
 
+
 export default {
   save: async function (req: express.Request, res: express.Response, refreshToken: string, userId: string) {
     req.body.refreshToken = refreshToken;
@@ -28,9 +29,14 @@ export default {
   },
   getById: async function (res: express.Response, id: string) {
     try {
-      const refreshToken = await RefreshModel.findOne({ _id: id });
-      console.log("Refresh token has been retrieved by id");
-      return refreshToken;
+      const refreshToken = await RefreshModel.findOne({ userId: id });
+      if (!refreshToken) {
+        res.send('for this userId no refresh token was found in the db');
+        return
+      } else {
+        console.log("Refresh token has been retrieved by id");
+        return refreshToken;
+      }
     } catch (error) {
       res.send(error);
     }
