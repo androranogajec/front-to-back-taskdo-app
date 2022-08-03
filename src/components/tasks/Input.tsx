@@ -1,10 +1,11 @@
 import React from 'react'
 
-function Input(props) {
+function Input(props: any) {
   return (
      <form onSubmit={props.handlePost}>
         <input
           value={props.currentTask}
+          //@ts-ignore
           variant="outlined"
           required={true}
           onChange={props.handleInputChange}

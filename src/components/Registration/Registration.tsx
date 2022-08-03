@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import s from "./registration.module.css";
 import { postUser } from "../../services/api";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import {
   filterUserObjectFromPasswordMatch,
   setPasswordToFalse,
 } from "../Validators/users/user";
-import { useLocalStorage } from "../Hooks/useLocalStorage";
+
 
 const userStringInit = {
   username: "",
@@ -26,20 +26,22 @@ const userBooleanInit = {
   email: true,
 };
 
-function Registration(props) {
+
+
+function Registration(props: any) {
   const [user, setUser] = useState(userStringInit);
   const [userBoolean, setUserBoolean] = useState(userBooleanInit);
 
   /* navigate to tasks if user is validated */
   const navigate = useNavigate();
 
-  function handleInputChange(event) {
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const name = event.target.name;
     const value = event.target.value;
     setUser({ ...user, [name]: value });
   }
   async function backendCallandNavigateAndSetCurrentContextWithToken(
-    validatedUser
+    validatedUser: any
   ) {
     try {
       //await the token from backend
@@ -51,21 +53,25 @@ function Registration(props) {
     }
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (isPasswordMatch(user)) {
       setUserBoolean(userBooleanInit);
+        //@ts-ignore
       if (isEveryFieldTrue(isUser(filterUserObjectFromPasswordMatch(user)))) {
         let validatedUser = filterUserObjectFromPasswordMatch(user);
         setUser(userStringInit);
         backendCallandNavigateAndSetCurrentContextWithToken(validatedUser);
       } else {
         /*if not every true setUserBoolean needed fields to false values */
+          //@ts-ignore
         setUserBoolean(isUser(filterUserObjectFromPasswordMatch(user)));
       }
     } else {
       /* passwords don't match,setPassword field to false */
+      
       setUserBoolean(
+          //@ts-ignore
         setPasswordToFalse(isUser(filterUserObjectFromPasswordMatch(user)))
       );
     }

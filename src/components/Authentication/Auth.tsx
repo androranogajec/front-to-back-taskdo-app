@@ -1,32 +1,27 @@
 import s from "./auth.module.css";
-import {
-  isUser,
-  isPasswordMatch,
-  isEveryFieldTrue,
-  filterUserObjectFromPasswordMatch,
-  setPasswordToFalse,
-} from "../Validators/users/user";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/api";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
-
+import { setToken } from "../../types/props";
 const initUserString = { username: "", password: "" };
 
-function Auth(props) {
+
+
+function Auth(props: setToken) {
   const [user, setUser] = useState(initUserString);
   const [token, setToken] = useLocalStorage("token", "");
   console.log("token auth", token);
 
   const navigate = useNavigate();
 
-  function handleInputChange(event) {
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     let name = event.target.name;
     let value = event.target.value;
     setUser({ ...user, [name]: value });
   }
 
-  async function handleSubmit(event) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     try {
       let tokenAndUserId = await login(user);

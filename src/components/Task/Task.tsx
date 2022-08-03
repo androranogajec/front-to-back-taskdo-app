@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "../../images/trash2.svg";
-function Task(props) {
+
+function Task(props: any) {
   console.log(props);
   return (
     <div key={props.value._id}>

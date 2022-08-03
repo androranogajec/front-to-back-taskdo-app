@@ -5,8 +5,9 @@ import { useLocalStorage } from "../Hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import {setToken} from "../../types/props"
 
-function Header(props) {
+function Header(props: setToken) {
   const [token, setToken] = useLocalStorage("token", "");
   const navigate = useNavigate();
   
@@ -24,15 +25,17 @@ axiosJWT.interceptors.request.use(
     /* get current date */
     let currentDate = Date.now();
     /* decode it */
-    const decodedToken = jwtDecode(token.accessToken);
+    const decodedToken: any = jwtDecode(token.accessToken);
     /* compare decoded date with current date */
     if (decodedToken.exp * 1000 < new Date(currentDate).getTime()) {
       /* await from the backend new access token */
       let data = await refreshToken(token.userId);
       /* set it to valid object */
+      //@ts-ignore
       data = { userId: token.userId, accessToken: data.data.accessToken };
       setToken(data);
       props.setToken(data);
+      //@ts-ignore
       config.headers["authorization"] = data.accessToken;
     }
     return config;
@@ -55,14 +58,14 @@ axiosJWT.interceptors.request.use(
     }
   }
 
-  async function handleUsers() {
+ /*  async function handleUsers() {
     try {
       let users = await getAllUsers(token.accessToken, axiosJWT);
       console.log(users);
     } catch (error) {
       console.log(error);
     }
-  }
+  } */
 
   
   return (
@@ -72,7 +75,7 @@ axiosJWT.interceptors.request.use(
         <div>name</div>
         <div>pending</div>
       </div>
-      <div onClick={handleUsers}>get all users</div>
+     {/*  <div onClick={handleUsers}>get all users</div> */}
       <div className={s.title}>TaskDo</div>
       <div className={s.logout} onClick={handleLogout}>
         Logout

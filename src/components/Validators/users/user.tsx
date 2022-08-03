@@ -1,10 +1,19 @@
 import validator from "validator";
 
-export function isPasswordMatch(user) {
+type User = {
+  username: string | boolean;
+  name: string | boolean;
+  email: string | boolean;
+  password: string | boolean;
+  passwordCheck?: string | boolean;
+};
+
+export function isPasswordMatch(user: User) {
   /* 
   if passwords match return true or false
   */
 
+  
   for (const property in user) {
     if (user["passwordCheck"] === user["password"]) {
       return true;
@@ -14,12 +23,12 @@ export function isPasswordMatch(user) {
   }
 }
 
-export function filterUserObjectFromPasswordMatch(user) {
+export function filterUserObjectFromPasswordMatch(user: User) {
   /* 
     filter user object from password check
   */
 
-  let userCopy = Object.assign({}, user);
+  let userCopy: User = Object.assign({}, user);
   for (const property in userCopy) {
     if (property === "passwordCheck") {
       delete userCopy["passwordCheck"];
@@ -28,7 +37,7 @@ export function filterUserObjectFromPasswordMatch(user) {
   }
 }
 
-export function setPasswordToFalse(user) {
+export function setPasswordToFalse(user: User) {
   /* 
 if password and password check don't match,
 then this function sets password to false, to manipulate the state further 
@@ -40,12 +49,17 @@ then this function sets password to false, to manipulate the state further
   }
   return userCopy;
 }
-export function isUser(user) {
+export function isUser(user: User) {
   /* 
     validate user object, 
     return boolean user object
     */
-  let userValidation = {};
+  let userValidation: User = {
+    username: false,
+    name: false,
+    password: false,
+    email: false,
+  };
   let userCopy = Object.assign({}, user);
 
   for (const property in userCopy) {
@@ -84,7 +98,7 @@ export function isUser(user) {
   return userValidation;
 }
 
-export function isEveryFieldTrue(user) {
+export function isEveryFieldTrue(user: User) {
   /* 
   if every object value is true, then true
   */
