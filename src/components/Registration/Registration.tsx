@@ -27,7 +27,6 @@ const userBooleanInit = {
 };
 
 
-
 function Registration(props: any) {
   const [user, setUser] = useState(userStringInit);
   const [userBoolean, setUserBoolean] = useState(userBooleanInit);
@@ -57,14 +56,14 @@ function Registration(props: any) {
     event.preventDefault();
     if (isPasswordMatch(user)) {
       setUserBoolean(userBooleanInit);
-        //@ts-ignore
+        
       if (isEveryFieldTrue(isUser(filterUserObjectFromPasswordMatch(user)))) {
         let validatedUser = filterUserObjectFromPasswordMatch(user);
         setUser(userStringInit);
         backendCallandNavigateAndSetCurrentContextWithToken(validatedUser);
       } else {
         /*if not every true setUserBoolean needed fields to false values */
-          //@ts-ignore
+        //@ts-ignore
         setUserBoolean(isUser(filterUserObjectFromPasswordMatch(user)));
       }
     } else {

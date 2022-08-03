@@ -1,19 +1,12 @@
 import validator from "validator";
+import { User } from "../../../types/user";
 
-type User = {
-  username: string | boolean;
-  name: string | boolean;
-  email: string | boolean;
-  password: string | boolean;
-  passwordCheck?: string | boolean;
-};
 
 export function isPasswordMatch(user: User) {
   /* 
   if passwords match return true or false
   */
-
-  
+ 
   for (const property in user) {
     if (user["passwordCheck"] === user["password"]) {
       return true;
@@ -49,7 +42,7 @@ then this function sets password to false, to manipulate the state further
   }
   return userCopy;
 }
-export function isUser(user: User) {
+export function isUser(user: User | any) {
   /* 
     validate user object, 
     return boolean user object
